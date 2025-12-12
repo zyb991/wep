@@ -1110,7 +1110,7 @@
         margin-bottom: 5px;
       }
 
-      /* 移动端隐藏随机题目、第一题、最后一题按钮 */
+      /* 移动端隐藏桌面端按钮 */
       .desktop-only {
         display: none !important;
       }
@@ -1173,7 +1173,7 @@
       }
     }
 
-    /* 桌面端显示所有按钮 */
+    /* 桌面端隐藏移动端按钮 */
     @media (min-width: 769px) {
       .mobile-only {
         display: none !important;
@@ -1365,15 +1365,6 @@
                   <button class="btn btn-secondary" id="lastBtn"
                     style="padding: 8px 15px; font-size: 14px;">最后一题</button>
                 </div>
-              </div>
-              <!-- 移动端额外按钮 -->
-              <div style="display: flex; gap: 10px; margin-top: 10px;" class="mobile-only">
-                <button class="btn btn-secondary" id="mobileRandomBtn"
-                  style="padding: 8px 15px; font-size: 14px; flex: 1;">随机题目</button>
-                <button class="btn btn-secondary" id="mobileFirstBtn"
-                  style="padding: 8px 15px; font-size: 14px; flex: 1;">第一题</button>
-                <button class="btn btn-secondary" id="mobileLastBtn"
-                  style="padding: 8px 15px; font-size: 14px; flex: 1;">最后一题</button>
               </div>
             </div>
           </div>
@@ -1700,9 +1691,7 @@
       updateExamStatsDisplay();
 
       // 初始化快速导航
-      setTimeout(() => {
-        setupQuickNavigation();
-      }, 1000);
+      setupQuickNavigation();
     });
 
     // 加载题目数据
@@ -1776,9 +1765,6 @@
         document.getElementById('randomBtn').style.display = "none";
         document.getElementById('firstBtn').style.display = "none";
         document.getElementById('lastBtn').style.display = "none";
-        document.getElementById('mobileRandomBtn').style.display = "none";
-        document.getElementById('mobileFirstBtn').style.display = "none";
-        document.getElementById('mobileLastBtn').style.display = "none";
         document.getElementById('progressText').textContent = "已完成所有题目";
         return;
       }
@@ -2030,6 +2016,19 @@
           closeAllQuestionsModal();
         }
       });
+
+      // 跳转功能事件
+      document.getElementById('jumpBtn').addEventListener('click', jumpToQuestion);
+      document.getElementById('jumpInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+          jumpToQuestion();
+        }
+      });
+      document.getElementById('prevBtn').addEventListener('click', prevQuestion);
+      document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+      document.getElementById('randomBtn').addEventListener('click', randomQuestion);
+      document.getElementById('firstBtn').addEventListener('click', firstQuestion);
+      document.getElementById('lastBtn').addEventListener('click', lastQuestion);
     }
 
     // 检查答案
@@ -2217,8 +2216,10 @@
       showNavBtn.style.marginLeft = '10px';
 
       // 插入到进度条容器中
-      const progressContainer = document.querySelector('.progress-container > div > div:last-child > div:last-child');
-      progressContainer.appendChild(showNavBtn);
+      const progressContainer = document.querySelector('.progress-container > div > div:last-child');
+      if (progressContainer) {
+        progressContainer.appendChild(showNavBtn);
+      }
 
       // 显示导航面板
       showNavBtn.addEventListener('click', function () {
@@ -2264,24 +2265,6 @@
           }
         });
       });
-
-      // 添加跳转按钮事件监听
-      document.getElementById('jumpBtn').addEventListener('click', jumpToQuestion);
-      document.getElementById('jumpInput').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-          jumpToQuestion();
-        }
-      });
-      document.getElementById('prevBtn').addEventListener('click', prevQuestion);
-      document.getElementById('nextBtn').addEventListener('click', nextQuestion);
-      document.getElementById('randomBtn').addEventListener('click', randomQuestion);
-      document.getElementById('firstBtn').addEventListener('click', firstQuestion);
-      document.getElementById('lastBtn').addEventListener('click', lastQuestion);
-
-      // 移动端按钮事件监听
-      document.getElementById('mobileRandomBtn').addEventListener('click', randomQuestion);
-      document.getElementById('mobileFirstBtn').addEventListener('click', firstQuestion);
-      document.getElementById('mobileLastBtn').addEventListener('click', lastQuestion);
     }
 
     // 跳转指定步数
